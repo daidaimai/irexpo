@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>出展企業一覧 | 福証IR EXPO　福岡の金融の祭典</title>
+<style>
+  :root {
+    --navy: #0d3b66;
+    --blue: #1565c0;
+    --sky: #29b6f6;
+    --skylight: #e1f5fe;
+    --orange: #ff7a00;
+    --orange-dark: #e8650a;
+    --yellow: #ffc107;
+    --ink: #1c2b39;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, "メイリオ", Meiryo, sans-serif;
+    color: var(--ink);
+    background: #f4faff;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== Header / Nav ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(13, 59, 102, 0.08);
+  }
+
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+  }
+
+  .logo {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span.mark {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 14px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--navy);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+  }
+
+  nav a:hover { border-color: var(--orange); }
+  nav a.active { border-color: var(--orange); color: var(--orange-dark); }
+
+  @media (max-width: 720px) {
+    nav ul { gap: 14px; }
+    nav a { font-size: 12px; }
+  }
+
+  /* ===== Page banner ===== */
+  .page-banner {
+    position: relative;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 55%, var(--sky) 100%);
+    color: #fff;
+    padding: 50px 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .page-banner::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,193,7,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .page-banner .eyebrow {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+
+  .page-banner h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 8px;
+    font-size: 32px;
+  }
+
+  .page-banner p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: 15px;
+    color: #e3f2fd;
+  }
+
+  /* ===== Content ===== */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  .count-note {
+    text-align: center;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    margin-bottom: 40px;
+    font-size: 15px;
+    color: var(--navy);
+  }
+
+  .count-note strong {
+    color: var(--orange-dark);
+    font-size: 18px;
+  }
+
+  .exhibitor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .exhibitor-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .exhibitor-grid { grid-template-columns: 1fr; }
+  }
+
+  .exhibitor-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exhibitor-card.is-empty {
+    border: 2px dashed #b3d4f0;
+    box-shadow: none;
+  }
+
+  .exhibitor-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .exhibitor-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: var(--skylight);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .exhibitor-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .exhibitor-card-title {
+    min-width: 0;
+  }
+
+  .exhibitor-no {
+    font-size: 11px;
+    color: #90a4ae;
+    font-weight: bold;
+  }
+
+  .exhibitor-name {
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--navy);
+    line-height: 1.4;
+  }
+
+  .is-empty .exhibitor-name {
+    color: #90a4ae;
+    font-weight: normal;
+  }
+
+  .exhibitor-meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .exhibitor-booth,
+  .exhibitor-category {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .exhibitor-booth {
+    background: #fff3e0;
+    color: var(--orange-dark);
+  }
+
+  .exhibitor-category {
+    background: var(--skylight);
+    color: var(--blue);
+  }
+
+  .exhibitor-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #546e7a;
+    margin: 0;
+  }
+
+  .is-empty .exhibitor-desc {
+    color: #b0bec5;
+  }
+
+  .exhibitor-seminar-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+    width: fit-content;
+  }
+
+  .exhibitor-seminar-flag.yes {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .exhibitor-seminar-flag.no {
+    background: #eceff1;
+    color: #78909c;
+  }
+
+  .exhibitor-seminars {
+    background: #f4faff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .exhibitor-seminar-item {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .exhibitor-seminar-item .time {
+    display: inline-block;
+    color: var(--blue);
+    font-weight: bold;
+    margin-right: 6px;
+  }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .back-link a {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 999px;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--navy);
+    color: #cfe3f5;
+    text-align: center;
+    padding: 36px 24px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  footer .org {
+    font-weight: bold;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .footer-links {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: #90caf9;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .footer-links a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo"><span class="mark">FSE</span>福岡証券取引所</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">ホーム</a></li>
+        <li><a href="index.html#overview">開催概要</a></li>
+        <li><a href="index.html#programs">イベント内容</a></li>
+        <li><a href="exhibitors.html" class="active">出展企業</a></li>
+        <li><a href="index.html#access">アクセス</a></li>
+        <li><a href="index.html#register">申し込み</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="page-banner">
+  <span class="eyebrow">福証IR EXPO　福岡の金融の祭典</span>
+  <h1>出展企業一覧</h1>
+  <p>2027年2月26日(金)・27日(土) 福岡国際会議場</p>
+</div>
+
+<main>
+  <div class="count-note">
+    出展企業は<strong>30社</strong>を予定しております。企業名・ブース情報は決定次第、随時こちらに掲載いたします。
+  </div>
+
+  <div class="exhibitor-grid" id="exhibitor-grid"></div>
+
+  <div class="back-link">
+    <a href="index.html">ホームに戻る</a>
+  </div>
+</main>
+
+<script>
+  /*
+    出展企業データ。決定次第、下記の配列に情報を追記してください。
+    - name:     企業名（未定の場合は null のままでOK）
+    - booth:    ブース番号（例: "A-01"。未定の場合は null）
+    - category: 業種・分野タグ（例: "証券"「銀行」など。不要なら null）
+    - desc:     紹介文（1〜2行程度を想定。未定の場合は null）
+    - logo:     ロゴ画像のURL（未定の場合は null。未設定時はイニシャル表示）
+    - seminars: ブース内ミニセミナーの開催予定（配列。開催しない場合は空配列 [] のままでOK）
+                各要素は { time: "13:00～13:30", title: "セミナー内容" } の形式。複数記載可。
+  */
+  const EXHIBITORS = Array.from({ length: 30 }, (_, i) => ({
+    no: i + 1,
+    name: null,
+    booth: null,
+    category: null,
+    desc: null,
+    logo: null,
+    seminars: [],
+    // 記載例:
+    // seminars: [
+    //   { time: "11:00～11:20", title: "会社概要・事業紹介" },
+    //   { time: "14:00～14:20", title: "IR担当者による決算ハイライト解説" },
+    // ],
+  }));
+
+  // ===== サンプル入力（上部3社・確認用。実データが決まったら書き換えてください） =====
+  Object.assign(EXHIBITORS[0], {
+    name: "福岡商事株式会社",
+    booth: "A-01",
+    category: "商社",
+    desc: "九州エリアを中心に、食品・生活消費財の卸売を展開。地域密着の事業モデルが特徴です。",
+    seminars: [
+      { time: "11:00～11:20", title: "会社概要・事業紹介" },
+      { time: "14:00～14:20", title: "IR担当者による決算ハイライト解説" },
+    ],
+  });
+
+  Object.assign(EXHIBITORS[1], {
+    name: "はかた電機工業株式会社",
+    booth: "A-02",
+    category: "製造業",
+    desc: "産業用電子部品の開発・製造を行う地場メーカー。半導体関連需要の取り込みに注力しています。",
+    seminars: [
+      { time: "12:30～12:50", title: "新工場稼働と成長戦略について" },
+    ],
+  });
+
+  Object.assign(EXHIBITORS[2], {
+    name: "九州フードサービス株式会社",
+    booth: "A-03",
+    category: "外食",
+    desc: "福岡発の外食チェーンを全国展開。国内・海外への出店を積極的に進めています。",
+    seminars: [],
+  });
+
+  const grid = document.getElementById('exhibitor-grid');
+
+  EXHIBITORS.forEach((ex) => {
+    const isEmpty = !ex.name;
+    const no = String(ex.no).padStart(2, '0');
+    const name = ex.name || `企業名（No.${no}・決定次第公開）`;
+    const desc = ex.desc || '出展企業の詳細は決定次第、こちらに掲載いたします。';
+    const initial = ex.name ? ex.name.charAt(0) : '🏢';
+    const hasSeminar = Array.isArray(ex.seminars) && ex.seminars.length > 0;
+
+    const card = document.createElement('div');
+    card.className = 'exhibitor-card' + (isEmpty ? ' is-empty' : '');
+
+    const logoHtml = ex.logo
+      ? `<img src="${ex.logo}" alt="${name}のロゴ">`
+      : initial;
+
+    const metaHtml = [
+      ex.booth ? `<span class="exhibitor-booth">ブース ${ex.booth}</span>` : '',
+      ex.category ? `<span class="exhibitor-category">${ex.category}</span>` : '',
+    ].join('');
+
+    const seminarFlagHtml = isEmpty ? '' : (
+      hasSeminar
+        ? `<span class="exhibitor-seminar-flag yes">🎤 ブース内ミニセミナーあり</span>`
+        : `<span class="exhibitor-seminar-flag no">ブース内ミニセミナーなし</span>`
+    );
+
+    const seminarListHtml = hasSeminar
+      ? `<div class="exhibitor-seminars">
+          ${ex.seminars.map((s) => `
+            <div class="exhibitor-seminar-item"><span class="time">${s.time}</span>${s.title}</div>
+          `).join('')}
+        </div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="exhibitor-card-top">
+        <div class="exhibitor-logo">${logoHtml}</div>
+        <div class="exhibitor-card-title">
+          <div class="exhibitor-no">No.${no}</div>
+          <div class="exhibitor-name">${name}</div>
+        </div>
+      </div>
+      ${metaHtml ? `<div class="exhibitor-meta">${metaHtml}</div>` : ''}
+      <p class="exhibitor-desc">${desc}</p>
+      ${seminarFlagHtml}
+      ${seminarListHtml}
+    `;
+
+    grid.appendChild(card);
+  });
+</script>
+
+<footer>
+  <div class="org">福岡証券取引所</div>
+  福証IR EXPO　福岡の金融の祭典　運営事務局<br>
+  本ページの内容は予告なく変更となる場合があります。
+  <div class="footer-links">
+    <a href="https://www.fse.or.jp/privacy/index.php" target="_blank" rel="noopener">個人情報の取り扱いについて</a>
+    <a href="https://www.fse.or.jp/disclaimer/index.php" target="_blank" rel="noopener">免責事項</a>
+  </div>
+</footer>
+
+</body>
+</html>

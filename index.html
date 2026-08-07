@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福証IR EXPO　福岡の金融の祭典 | 福岡証券取引所</title>
+<style>
+  :root {
+    --navy: #0d3b66;
+    --blue: #1565c0;
+    --sky: #29b6f6;
+    --skylight: #e1f5fe;
+    --orange: #ff7a00;
+    --orange-dark: #e8650a;
+    --yellow: #ffc107;
+    --ink: #1c2b39;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, "メイリオ", Meiryo, sans-serif;
+    color: var(--ink);
+    background: #f4faff;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== Header / Nav ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(13, 59, 102, 0.08);
+  }
+
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+  }
+
+  .logo {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span.mark {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 14px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--navy);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+  }
+
+  nav a:hover { border-color: var(--orange); }
+
+  @media (max-width: 720px) {
+    nav ul { gap: 14px; }
+    nav a { font-size: 12px; }
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 55%, var(--sky) 100%);
+    color: #fff;
+    padding: 70px 24px 100px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -80px;
+    left: -80px;
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(255,193,7,0.35) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -100px;
+    right: -60px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,122,0,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero .eyebrow {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    position: relative;
+    z-index: 1;
+    font-size: 53px;
+    margin: 0 0 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero h1 .accent {
+    color: var(--yellow);
+  }
+
+  .hero p.lead {
+    position: relative;
+    z-index: 1;
+    font-size: 22px;
+    margin: 0 0 30px;
+    color: #e3f2fd;
+  }
+
+  .hero-info {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .info-pill {
+    background: rgba(255,255,255,0.95);
+    color: var(--navy);
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-size: 17px;
+    font-weight: bold;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+
+  a.info-pill {
+    cursor: pointer;
+  }
+
+  a.info-pill:hover {
+    background: rgba(255,255,255,1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    text-decoration: underline;
+  }
+
+  .badges {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+  }
+
+  .badge {
+    background: var(--orange);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .badge.yellow { background: var(--yellow); color: #6d4c00; }
+  .badge.outline { background: transparent; border: 1.5px solid #fff; }
+
+  .cta-btn {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 16px 44px;
+    border-radius: 999px;
+    box-shadow: 0 10px 24px rgba(255, 122, 0, 0.4);
+    transition: transform 0.15s;
+  }
+
+  .cta-btn:hover { transform: translateY(-2px); }
+
+  /* ===== Section base ===== */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 70px 24px;
+  }
+
+  .section-head {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  .section-head .tag {
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  .section-head h2 {
+    font-size: 28px;
+    color: var(--navy);
+    margin: 8px 0 0;
+  }
+
+  /* ===== Overview ===== */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 720px) {
+    .overview-grid { grid-template-columns: 1fr; }
+  }
+
+  .overview-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    border-left: 5px solid var(--sky);
+  }
+
+  .overview-card .label {
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .overview-card .value {
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .overview-card .note {
+    font-size: 12px;
+    color: #90a4ae;
+    margin-top: 6px;
+  }
+
+  /* ===== Programs ===== */
+  .program-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .program-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .program-grid { grid-template-columns: 1fr; }
+  }
+
+  .program-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .program-card:hover { transform: translateY(-4px); }
+
+  .program-card .icon-bar {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
+
+  .program-card:nth-child(2n) .icon-bar {
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+  }
+
+  .program-card .body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .program-card .free-tag {
+    display: inline-block;
+    background: var(--skylight);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+
+  .program-card h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: var(--navy);
+  }
+
+  .program-card p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #455a64;
+    margin: 0 0 10px;
+  }
+
+  .more-link {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--blue);
+    margin-top: auto;
+    padding-top: 12px;
+    align-self: flex-end;
+  }
+
+  .more-link::after { content: " →"; }
+
+  /* ===== Exhibitors ===== */
+  .exhibitors-teaser {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    padding: 44px 24px;
+    text-align: center;
+  }
+
+  .exhibitors-teaser p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+    max-width: 560px;
+    margin: 0 auto 24px;
+  }
+
+  .exhibitors-teaser strong {
+    color: var(--orange-dark);
+    font-size: 20px;
+  }
+
+  /* ===== Access ===== */
+  .access-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 720px) {
+    .access-card { grid-template-columns: 1fr; }
+  }
+
+  .access-card h3 {
+    color: var(--navy);
+    margin: 0 0 14px;
+  }
+
+  .access-card dl {
+    margin: 0;
+  }
+
+  .access-card dt {
+    font-size: 12px;
+    color: var(--blue);
+    font-weight: bold;
+    margin-top: 14px;
+  }
+
+  .access-card dd {
+    margin: 4px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .map-placeholder {
+    background: var(--skylight);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--blue);
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 200px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* ===== Registration CTA ===== */
+  .register {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%);
+    text-align: center;
+    color: #fff;
+    border-radius: 28px;
+    margin: 0 auto 70px;
+    max-width: 1052px;
+    padding: 56px 24px;
+  }
+
+  .register h2 {
+    margin: 0 0 12px;
+    font-size: 26px;
+  }
+
+  .register p {
+    margin: 0 0 28px;
+    font-size: 15px;
+  }
+
+  .register .cta-btn {
+    background: #fff;
+    color: var(--orange-dark);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  }
+
+  .register .peatix-note {
+    margin: 14px 0 0;
+    font-size: 12px;
+    opacity: 0.9;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--navy);
+    color: #cfe3f5;
+    text-align: center;
+    padding: 36px 24px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  footer .org {
+    font-weight: bold;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .footer-links {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: #90caf9;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .footer-links a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo"><span class="mark">FSE</span>福岡証券取引所</div>
+    <nav>
+      <ul>
+        <li><a href="#overview">開催概要</a></li>
+        <li><a href="#programs">イベント内容</a></li>
+        <li><a href="exhibitors.html">出展企業</a></li>
+        <li><a href="#access">アクセス</a></li>
+        <li><a href="#register">申し込み</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <span class="eyebrow">福岡証券取引所 主催</span>
+  <h1>福証IR<span class="accent">EXPO</span></h1>
+  <p class="lead">福岡の金融の祭典</p>
+
+  <div class="hero-info">
+    <div class="info-pill">📅 2027年2月26日(金)・27日(土)</div>
+    <a href="#access" class="info-pill">📍 福岡国際会議場</a>
+  </div>
+
+  <div class="badges">
+    <span class="badge">入場無料</span>
+    <span class="badge yellow">事前登録制</span>
+    <span class="badge outline">個別相談あり</span>
+  </div>
+
+  <a href="https://peatix.com/?lang=ja" target="_blank" rel="noopener" class="cta-btn">参加申し込み（無料）</a>
+</div>
+
+<section id="overview">
+  <div class="section-head">
+    <div class="tag">EVENT OVERVIEW</div>
+    <h2>開催概要</h2>
+  </div>
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="label">主催</div>
+      <div class="value">福岡証券取引所</div>
+    </div>
+    <div class="overview-card">
+      <div class="label">日時</div>
+      <div class="value">2027年2月26日(金)・27日(土)<br>10:00～17:00</div>
+      <div class="note">なお、26日は開会式を行います</div>
+    </div>
+    <div class="overview-card">
+      <div class="label">会場</div>
+      <div class="value">福岡国際会議場</div>
+    </div>
+    <div class="overview-card">
+      <div class="label">参加費</div>
+      <div class="value">無料（事前登録制）</div>
+    </div>
+    <div class="overview-card">
+      <div class="label">対象</div>
+      <div class="value">個人投資家、これから資産形成を始めたい方、学生の方など</div>
+    </div>
+    <div class="overview-card">
+      <div class="label">参加企業</div>
+      <div class="value">福岡証券取引所 上場企業（30社を予定）<br>ほか、証券取引所、金融機関、関連団体</div>
+      <div class="note"><a href="exhibitors.html" style="color: var(--blue);">出展企業一覧はこちら</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="programs">
+  <div class="section-head">
+    <div class="tag">EVENT CONTENTS</div>
+    <h2>イベント内容</h2>
+  </div>
+  <div class="program-grid">
+    <div class="program-card">
+      <div class="icon-bar">🎤</div>
+      <div class="body">
+        <span class="free-tag">無料・予約不要</span>
+        <h3>特別講演会</h3>
+        <p>資産形成や地域経済をテーマに、各分野の有識者による講演を全3回開催します。席に限りがございます。当日先着順受付。</p>
+        <a href="events.html#lecture" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="icon-bar">💰</div>
+      <div class="body">
+        <span class="free-tag">無料・当日受付</span>
+        <h3>マネーセミナー</h3>
+        <p>NISA・iDeCoや資産運用の基礎をやさしく学べるセミナーです。</p>
+        <a href="events.html#seminar" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="icon-bar">🗣️</div>
+      <div class="body">
+        <span class="free-tag">無料・予約制</span>
+        <h3>個別相談コーナー</h3>
+        <p>ファイナンシャルプランナー等の専門家に、一人ひとりの疑問や不安をご相談いただけます。</p>
+        <a href="events.html#consultation" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="icon-bar">🏢</div>
+      <div class="body">
+        <span class="free-tag">入場無料</span>
+        <h3>企業ブース</h3>
+        <p>福岡証券取引所上場企業によるブース展示。自由見学のほか、ミニ説明会・個別面談も実施予定です。</p>
+        <a href="events.html#booth" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="icon-bar">🚶</div>
+      <div class="body">
+        <span class="free-tag">予約制</span>
+        <h3>ブースツアー</h3>
+        <p>スタッフと一緒に気になる企業ブースを巡る、初めての方にもおすすめのツアー企画です。</p>
+        <a href="events.html#tour" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="icon-bar">👨‍👩‍👧</div>
+      <div class="body">
+        <span class="free-tag">事前予約制</span>
+        <h3>親子で学ぶマネー教室</h3>
+        <p>お子様と一緒に「お金」や「会社」について学べる、親子参加型プログラムです。対象：小学4年生〜中学3年生。</p>
+        <a href="events.html#family" class="more-link">詳しく見る</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="exhibitors">
+  <div class="section-head">
+    <div class="tag">EXHIBITORS</div>
+    <h2>出展企業一覧</h2>
+  </div>
+  <div class="exhibitors-teaser">
+    <p>福証上場企業、<strong>30社</strong>が出展を予定しています。企業名・ブース情報は決定次第、出展企業ページにて随時公開します。</p>
+    <a href="exhibitors.html" class="cta-btn">出展企業はこちら</a>
+  </div>
+</section>
+
+<section id="access">
+  <div class="section-head">
+    <div class="tag">ACCESS</div>
+    <h2>アクセス</h2>
+  </div>
+  <div class="access-card">
+    <div>
+      <h3>福岡国際会議場</h3>
+      <dl>
+        <dt>会場</dt>
+        <dd>福岡国際会議場</dd>
+        <dt>アクセス</dt>
+        <dd>詳細なアクセス方法は決定後に更新します</dd>
+      </dl>
+    </div>
+    <div class="map-placeholder">
+      地図・アクセス詳細は<br>近日公開予定です
+    </div>
+  </div>
+</section>
+
+<div id="register" class="register">
+  <h2>参加申し込みは<br class="mobile-only">無料・事前登録制です</h2>
+  <p>福証上場企業との出会いと、資産形成のヒントがここに。皆様のご参加をお待ちしています。</p>
+  <a href="https://peatix.com/?lang=ja" target="_blank" rel="noopener" class="cta-btn">参加申し込みフォームへ（Peatix）</a>
+  <p class="peatix-note">※申し込みはPeatix（外部サイト）にて受け付けます</p>
+</div>
+
+<footer>
+  <div class="org">福岡証券取引所</div>
+  福証IR EXPO　福岡の金融の祭典　運営事務局<br>
+  本ページの内容は予告なく変更となる場合があります。
+  <div class="footer-links">
+    <a href="https://www.fse.or.jp/privacy/index.php" target="_blank" rel="noopener">個人情報の取り扱いについて</a>
+    <a href="https://www.fse.or.jp/disclaimer/index.php" target="_blank" rel="noopener">免責事項</a>
+  </div>
+</footer>
+
+</body>
+</html>

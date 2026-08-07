@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イベント内容詳細 | 福証IR EXPO　福岡の金融の祭典</title>
+<style>
+  :root {
+    --navy: #0d3b66;
+    --blue: #1565c0;
+    --sky: #29b6f6;
+    --skylight: #e1f5fe;
+    --orange: #ff7a00;
+    --orange-dark: #e8650a;
+    --yellow: #ffc107;
+    --ink: #1c2b39;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, "メイリオ", Meiryo, sans-serif;
+    color: var(--ink);
+    background: #f4faff;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== Header / Nav ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(13, 59, 102, 0.08);
+  }
+
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+  }
+
+  .logo {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span.mark {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 14px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--navy);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+  }
+
+  nav a:hover { border-color: var(--orange); }
+
+  @media (max-width: 720px) {
+    nav ul { gap: 14px; }
+    nav a { font-size: 12px; }
+  }
+
+  /* ===== Page banner ===== */
+  .page-banner {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 55%, var(--sky) 100%);
+    color: #fff;
+    padding: 50px 24px;
+    text-align: center;
+  }
+
+  .page-banner .eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+
+  .page-banner h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+  }
+
+  .page-banner p {
+    margin: 0;
+    font-size: 15px;
+    color: #e3f2fd;
+  }
+
+  /* ===== Section ===== */
+  .events-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* ===== Event section ===== */
+  .event-section {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .event-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 32px 24px;
+    border-bottom: 1px solid #e1f5fe;
+  }
+
+  .event-icon {
+    font-size: 44px;
+    flex-shrink: 0;
+  }
+
+  .event-header-text h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: var(--navy);
+  }
+
+  .event-header-text .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag-pill {
+    display: inline-block;
+    background: var(--skylight);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  .tag-pill.orange {
+    background: #fff3e0;
+    color: var(--orange-dark);
+  }
+
+  .tag-pill.green {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .event-body {
+    padding: 28px 32px;
+  }
+
+  .event-body p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--ink);
+    margin: 0 0 16px;
+  }
+
+  .event-body p:last-child { margin-bottom: 0; }
+
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .info-table th {
+    width: 120px;
+    background: #f4faff;
+    color: var(--blue);
+    font-weight: bold;
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid #e1f5fe;
+    vertical-align: top;
+  }
+
+  .info-table td {
+    padding: 10px 14px;
+    border: 1px solid #e1f5fe;
+    line-height: 1.7;
+  }
+
+  .notice-box {
+    background: #fff8e1;
+    border-left: 4px solid var(--yellow);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #5d4037;
+    margin-top: 16px;
+  }
+
+  .caution-box {
+    background: #fef3ec;
+    border-left: 4px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #5d2300;
+    margin-top: 16px;
+  }
+
+  /* ===== Back link ===== */
+  .back-link-wrap {
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .back-link {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 999px;
+  }
+
+  /* ===== Page anchor offset (sticky header考慮) ===== */
+  .anchor-target {
+    scroll-margin-top: 80px;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--navy);
+    color: #cfe3f5;
+    text-align: center;
+    padding: 36px 24px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  footer .org {
+    font-weight: bold;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .footer-links {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: #90caf9;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .footer-links a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo"><span class="mark">FSE</span>福岡証券取引所</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">ホーム</a></li>
+        <li><a href="index.html#overview">開催概要</a></li>
+        <li><a href="index.html#programs">イベント内容</a></li>
+        <li><a href="exhibitors.html">出展企業</a></li>
+        <li><a href="index.html#access">アクセス</a></li>
+        <li><a href="index.html#register">申し込み</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="page-banner">
+  <span class="eyebrow">福証IR EXPO　福岡の金融の祭典</span>
+  <h1>イベント内容詳細</h1>
+  <p>2027年2月26日(金)・27日(土) ｜ 福岡国際会議場</p>
+</div>
+
+<div class="events-wrap">
+
+  <!-- ===== 特別講演会 ===== -->
+  <div id="lecture" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">🎤</div>
+      <div class="event-header-text">
+        <h2>特別講演会</h2>
+        <div class="tags">
+          <span class="tag-pill green">無料</span>
+          <span class="tag-pill green">事前予約不要</span>
+          <span class="tag-pill">全3回開催</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>開催回数</th><td>全3回</td></tr>
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>申し込み</th><td>事前予約不要（当日直接会場へ）</td></tr>
+      </table>
+      <p>資産形成や地域経済、金融の未来をテーマに、各分野の有識者・専門家による特別講演を全3回開催します。それぞれ異なるテーマで、幅広い内容でお届けします（登壇者・テーマは決定次第公開予定）。</p>
+      <div class="caution-box">
+        ⚠️ <strong>席に限りがございます。当日先着順受付となります。</strong><br>
+        満席の場合はご入場いただけない場合がございますので、お早めにご来場ください。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== マネーセミナー ===== -->
+  <div id="seminar" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">💰</div>
+      <div class="event-header-text">
+        <h2>マネーセミナー</h2>
+        <div class="tags">
+          <span class="tag-pill green">無料</span>
+          <span class="tag-pill">当日受付</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>申し込み</th><td>当日受付（事前予約不要）</td></tr>
+        <tr><th>対象</th><td>どなたでもご参加いただけます</td></tr>
+      </table>
+      <p>NISA・iDeCoをはじめ、資産運用や家計管理の基礎など、生活に役立つお金の知識をやさしく学べるセミナーです。各回ごとにテーマを設け、初心者の方でもわかりやすい内容でお届けします。</p>
+      <div class="notice-box">
+        💡 セミナーのテーマ・時間割は決定次第、こちらに掲載予定です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 個別相談コーナー ===== -->
+  <div id="consultation" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">🗣️</div>
+      <div class="event-header-text">
+        <h2>個別相談コーナー</h2>
+        <div class="tags">
+          <span class="tag-pill green">無料</span>
+          <span class="tag-pill orange">事前予約制</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>申し込み</th><td>事前予約制（当日枠も若干名あり）</td></tr>
+        <tr><th>相談員</th><td>ファイナンシャルプランナー等の専門家</td></tr>
+        <tr><th>相談時間</th><td>1組 約30分（予定）</td></tr>
+      </table>
+      <p>資産運用・保険・老後資金・相続など、お金に関するさまざまな悩みをファイナンシャルプランナー等の専門家に無料でご相談いただけます。一人ひとりの状況に合わせた個別アドバイスをお受けいただけます。</p>
+      <div class="notice-box">
+        💡 予約方法の詳細は決定次第、こちらに掲載予定です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 企業ブース ===== -->
+  <div id="booth" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">🏢</div>
+      <div class="event-header-text">
+        <h2>企業ブース</h2>
+        <div class="tags">
+          <span class="tag-pill green">入場無料</span>
+          <span class="tag-pill">自由見学あり</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>出展予定</th><td>福岡証券取引所上場企業（30社予定）ほか、証券取引所・金融機関・関連団体</td></tr>
+      </table>
+      <p>福証上場企業をはじめ、証券取引所・金融機関・関連団体が出展するブースを自由にご見学いただけます。各ブースでは以下のコンテンツをご用意しています。</p>
+      <table class="info-table">
+        <tr><th>自由見学</th><td>予約不要で自由にブースを見て回れます</td></tr>
+        <tr><th>ミニ説明会</th><td>各ブースで短時間の会社説明を実施（随時開催）</td></tr>
+        <tr><th>個別面談</th><td>担当者と1対1でお話しいただけます（一部ブースで事前予約あり）</td></tr>
+      </table>
+      <div class="notice-box">
+        💡 出展企業の詳細は<a href="exhibitors.html" style="color:var(--blue);">出展企業一覧ページ</a>にて随時公開予定です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ブースツアー ===== -->
+  <div id="tour" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">🚶</div>
+      <div class="event-header-text">
+        <h2>ブースツアー</h2>
+        <div class="tags">
+          <span class="tag-pill green">無料</span>
+          <span class="tag-pill orange">事前予約制</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>申し込み</th><td>事前予約制</td></tr>
+        <tr><th>所要時間</th><td>約60分（予定）</td></tr>
+      </table>
+      <p>担当スタッフがご案内しながら、複数の企業ブースを一緒に巡る参加型ツアーです。「どのブースを見ればいいかわからない」「投資初心者で何から始めていいか迷っている」という方に特におすすめです。</p>
+      <div class="notice-box">
+        💡 ツアーのスケジュールや予約方法は決定次第、こちらに掲載予定です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 親子で学ぶマネー教室 ===== -->
+  <div id="family" class="event-section anchor-target">
+    <div class="event-header">
+      <div class="event-icon">👨‍👩‍👧</div>
+      <div class="event-header-text">
+        <h2>親子で学ぶマネー教室</h2>
+        <div class="tags">
+          <span class="tag-pill green">無料</span>
+          <span class="tag-pill orange">事前予約制</span>
+          <span class="tag-pill">小学4年生〜中学3年生対象</span>
+        </div>
+      </div>
+    </div>
+    <div class="event-body">
+      <table class="info-table">
+        <tr><th>参加費</th><td>無料</td></tr>
+        <tr><th>申し込み</th><td>事前予約制</td></tr>
+        <tr><th>対象</th><td>小学4年生〜中学3年生（保護者同伴）</td></tr>
+        <tr><th>定員</th><td>各回定員あり（詳細は決定次第公開）</td></tr>
+      </table>
+      <p>「お金って何？」「なぜ貯金するの？」「会社はどうやって成長するの？」子どもたちが楽しみながら、お金や経済の仕組みを身近に学べるプログラムです。保護者の方も一緒に参加していただくことで、ご家庭でのお金の話のきっかけにもなります。</p>
+      <div class="caution-box">
+        ⚠️ 事前予約制です。定員に達し次第、受付を終了します。<br>
+        対象は小学4年生〜中学3年生です。保護者の方と一緒にお申し込みください。
+      </div>
+      <div class="notice-box">
+        💡 プログラム内容・予約方法は決定次第、こちらに掲載予定です。
+      </div>
+    </div>
+  </div>
+
+  <div class="back-link-wrap">
+    <a href="index.html" class="back-link">ホームに戻る</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="org">福岡証券取引所</div>
+  福証IR EXPO　福岡の金融の祭典　運営事務局<br>
+  本ページの内容は予告なく変更となる場合があります。
+  <div class="footer-links">
+    <a href="https://www.fse.or.jp/privacy/index.php" target="_blank" rel="noopener">個人情報の取り扱いについて</a>
+    <a href="https://www.fse.or.jp/disclaimer/index.php" target="_blank" rel="noopener">免責事項</a>
+  </div>
+</footer>
+
+</body>
+</html>

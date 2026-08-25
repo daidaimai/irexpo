@@ -22,7 +22,7 @@
     margin: 0;
     font-family: "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, "メイリオ", Meiryo, sans-serif;
     color: var(--ink);
-    background: #f4faff;
+    background: #e9f4fd;
   }
 
   a { text-decoration: none; color: inherit; }
@@ -199,18 +199,18 @@
 
   .info-table th {
     width: 120px;
-    background: #f4faff;
+    background: #e9f4fd;
     color: var(--blue);
     font-weight: bold;
     padding: 10px 14px;
     text-align: left;
-    border: 1px solid #e1f5fe;
+    border: 1px solid #cfe8f7;
     vertical-align: top;
   }
 
   .info-table td {
     padding: 10px 14px;
-    border: 1px solid #e1f5fe;
+    border: 1px solid #cfe8f7;
     line-height: 1.7;
   }
 
@@ -232,6 +232,130 @@
     font-size: 14px;
     color: #5d2300;
     margin-top: 16px;
+  }
+
+  /* ===== Lecture sessions ===== */
+  .session-block {
+    background: #f4faff;
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+  }
+
+  .session-block:last-child { margin-bottom: 0; }
+
+  .session-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+
+  .session-title .no {
+    background: var(--blue);
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .session-title h3 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--navy);
+  }
+
+  .session-time {
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .session-theme {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink);
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 0 0 16px;
+  }
+
+  .session-theme .label {
+    display: block;
+    font-size: 11px;
+    color: var(--orange-dark);
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .session-note {
+    font-size: 13px;
+    color: #546e7a;
+    margin: 0 0 14px;
+    line-height: 1.7;
+  }
+
+  .speaker-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .speaker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .speaker-photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--skylight);
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .speaker-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .speaker-info .name {
+    font-weight: bold;
+    color: var(--navy);
+    font-size: 14px;
+  }
+
+  .speaker-info .role {
+    font-size: 12px;
+    color: #607d8b;
+    margin-top: 2px;
+  }
+
+  .panelist-list {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.8;
+  }
+
+  .panelist-list li::before {
+    content: "・";
+    color: var(--blue);
   }
 
   /* ===== Back link ===== */
@@ -334,7 +458,83 @@
         <tr><th>参加費</th><td>無料</td></tr>
         <tr><th>申し込み</th><td>事前予約不要（当日直接会場へ）</td></tr>
       </table>
-      <p>資産形成や地域経済、金融の未来をテーマに、各分野の有識者・専門家による特別講演を全3回開催します。それぞれ異なるテーマで、幅広い内容でお届けします（登壇者・テーマは決定次第公開予定）。</p>
+      <p>資産形成や地域経済、金融の未来をテーマに、各分野の有識者・専門家による特別講演を全3回開催します。それぞれ異なるテーマで、幅広い内容でお届けします。</p>
+
+      <!--
+        登壇者の顔写真は各 .speaker-photo 内に <img src="images/xxx.jpg" alt="○○氏"> を追加すると表示されます。
+        画像未設定の間はイニシャルが仮表示されます。
+      -->
+
+      <div class="session-block">
+        <div class="session-title"><span class="no">第1回</span><h3>外国為替・内外市場環境分析（対談）</h3></div>
+        <div class="session-time">📅 2027年2月26日（金）11:00～12:00</div>
+        <div class="session-theme">
+          <span class="label">テーマ</span>
+          外国為替と海外市場および日本市場の取り巻く環境分析について
+        </div>
+        <div class="speaker-row">
+          <div class="speaker">
+            <div class="speaker-photo">A</div>
+            <div class="speaker-info">
+              <div class="name">A氏</div>
+              <div class="role">N社 チーフストラテジスト</div>
+            </div>
+          </div>
+          <div class="speaker">
+            <div class="speaker-photo">B</div>
+            <div class="speaker-info">
+              <div class="name">B氏</div>
+              <div class="role">F社 チーフストラテジスト</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="session-block">
+        <div class="session-title"><span class="no">第2回</span><h3>投資アナリスト×タレント対談／上場企業トークセッション</h3></div>
+        <div class="session-time">📅 2027年2月27日（土）11:00～12:00</div>
+        <div class="speaker-row">
+          <div class="speaker">
+            <div class="speaker-photo">C</div>
+            <div class="speaker-info">
+              <div class="name">C氏</div>
+              <div class="role">投資アナリスト</div>
+            </div>
+          </div>
+          <div class="speaker">
+            <div class="speaker-photo">D</div>
+            <div class="speaker-info">
+              <div class="name">D氏</div>
+              <div class="role">タレント</div>
+            </div>
+          </div>
+        </div>
+        <p class="session-note">上記対談に加え、上場企業3社の代表者にもご登壇いただきます。</p>
+        <ul class="panelist-list">
+          <li>X社 代表者</li>
+          <li>Y社 代表者</li>
+          <li>Z社 代表者</li>
+        </ul>
+      </div>
+
+      <div class="session-block">
+        <div class="session-title"><span class="no">第3回</span><h3>四季報の見方</h3></div>
+        <div class="session-time">📅 2027年2月27日（土）12:00～13:00</div>
+        <div class="session-theme">
+          <span class="label">テーマ</span>
+          四季報の見方
+        </div>
+        <div class="speaker-row">
+          <div class="speaker">
+            <div class="speaker-photo">G</div>
+            <div class="speaker-info">
+              <div class="name">G氏</div>
+              <div class="role">東洋経済新報社 編集次長</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="caution-box">
         ⚠️ <strong>席に限りがございます。当日先着順受付となります。</strong><br>
         満席の場合はご入場いただけない場合がございますので、お早めにご来場ください。
@@ -438,11 +638,27 @@
       <table class="info-table">
         <tr><th>参加費</th><td>無料</td></tr>
         <tr><th>申し込み</th><td>事前予約制</td></tr>
-        <tr><th>所要時間</th><td>約60分（予定）</td></tr>
+        <tr><th>1クールの内容</th><td>5社のブースを巡回（1社あたり5〜7分程度）</td></tr>
+        <tr><th>1クールの所要時間</th><td>約25〜30分</td></tr>
+        <tr><th>開催クール数</th><td>全6クール（出展企業30社を5社ずつ6グループに分けて巡回）</td></tr>
+        <tr><th>参加可能数</th><td>お1人様、最大3クールまで参加可能<br>（例：第1・3・5クールの組み合わせなど、お好きなクールをお選びいただけます）</td></tr>
       </table>
       <p>担当スタッフがご案内しながら、複数の企業ブースを一緒に巡る参加型ツアーです。「どのブースを見ればいいかわからない」「投資初心者で何から始めていいか迷っている」という方に特におすすめです。</p>
+
+      <table class="info-table">
+        <tr><th>第1クール</th><td>13:00 スタート</td></tr>
+        <tr><th>第2クール</th><td>13:20 スタート</td></tr>
+        <tr><th>第3クール</th><td>13:40 スタート</td></tr>
+        <tr><th>第4クール</th><td>14:00 スタート</td></tr>
+        <tr><th>第5クール</th><td>14:20 スタート</td></tr>
+        <tr><th>第6クール</th><td>14:40 スタート</td></tr>
+      </table>
+
       <div class="notice-box">
-        💡 ツアーのスケジュールや予約方法は決定次第、こちらに掲載予定です。
+        💡 各クールは20分おきに順次スタートし、複数クールの時間帯が一部重なりながら進行します。全6クールは13:00〜15:10頃の約2時間の中で開催予定です（詳細な終了時刻・訪問企業の割り当ては決定次第、こちらに掲載予定です）。
+      </div>
+      <div class="caution-box">
+        ⚠️ 1人あたりのご参加は最大3クールまでとなります。予約方法の詳細は決定次第、こちらに掲載予定です。
       </div>
     </div>
   </div>
@@ -462,18 +678,30 @@
     </div>
     <div class="event-body">
       <table class="info-table">
+        <tr><th>開催日時</th><td>2027年2月27日（土）13:00〜15:00（2時間）</td></tr>
+        <tr><th>講師</th><td>福岡証券取引所 総務部</td></tr>
         <tr><th>参加費</th><td>無料</td></tr>
         <tr><th>申し込み</th><td>事前予約制</td></tr>
         <tr><th>対象</th><td>小学4年生〜中学3年生（保護者同伴）</td></tr>
         <tr><th>定員</th><td>各回定員あり（詳細は決定次第公開）</td></tr>
       </table>
       <p>「お金って何？」「なぜ貯金するの？」「会社はどうやって成長するの？」子どもたちが楽しみながら、お金や経済の仕組みを身近に学べるプログラムです。保護者の方も一緒に参加していただくことで、ご家庭でのお金の話のきっかけにもなります。</p>
+
+      <p>当日は2部構成で実施します。</p>
+      <table class="info-table">
+        <tr><th>13:00〜13:40（40分）</th><td>お金に関する知識を学ぶ時間</td></tr>
+        <tr><th>13:40〜13:50（10分）</th><td>休憩</td></tr>
+        <tr><th>13:50〜14:40（50分）</th><td>株式運用ゲーム「ブルサ」を用いた体験型学習</td></tr>
+        <tr><th>14:40〜15:00（20分）</th><td>質問時間・まとめ</td></tr>
+      </table>
+      <p style="font-size:12px; color:#90a4ae; margin-top:-8px;">※「ブルサ」は東京証券取引所の登録商標です。</p>
+
       <div class="caution-box">
         ⚠️ 事前予約制です。定員に達し次第、受付を終了します。<br>
         対象は小学4年生〜中学3年生です。保護者の方と一緒にお申し込みください。
       </div>
       <div class="notice-box">
-        💡 プログラム内容・予約方法は決定次第、こちらに掲載予定です。
+        💡 現在1回の開催を予定していますが、今後2回開催となる可能性があります。プログラム内容・予約方法とあわせて、詳細が決まり次第こちらに掲載いたします。
       </div>
     </div>
   </div>

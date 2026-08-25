@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>出展企業一覧 | 福証IR EXPO　福岡の金融の祭典</title>
+<title>出展企業・協賛企業一覧 | 福証IR EXPO　福岡の金融の祭典</title>
 <style>
   :root {
     --navy: #0d3b66;
@@ -22,7 +22,7 @@
     margin: 0;
     font-family: "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, "メイリオ", Meiryo, sans-serif;
     color: var(--ink);
-    background: #f4faff;
+    background: #e9f4fd;
   }
 
   a { text-decoration: none; color: inherit; }
@@ -157,6 +157,39 @@
   .count-note strong {
     color: var(--orange-dark);
     font-size: 18px;
+  }
+
+  .section-divider {
+    text-align: center;
+    margin: 64px 0 28px;
+  }
+
+  .section-divider .tag {
+    display: block;
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .section-divider h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--navy);
+  }
+
+  .sponsor-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 999px;
+    width: fit-content;
+    background: #fff3e0;
+    color: var(--orange-dark);
   }
 
   .exhibitor-grid {
@@ -387,7 +420,7 @@
 
 <div class="page-banner">
   <span class="eyebrow">福証IR EXPO　福岡の金融の祭典</span>
-  <h1>出展企業一覧</h1>
+  <h1>出展企業・協賛企業一覧</h1>
   <p>2027年2月26日(金)・27日(土) 福岡国際会議場</p>
 </div>
 
@@ -397,6 +430,17 @@
   </div>
 
   <div class="exhibitor-grid" id="exhibitor-grid"></div>
+
+  <div class="section-divider">
+    <span class="tag">SPONSORS</span>
+    <h2>協賛企業</h2>
+  </div>
+
+  <div class="count-note">
+    協賛企業は<strong>10社</strong>を予定しております（証券会社を中心に、決定次第随時こちらに掲載いたします）。
+  </div>
+
+  <div class="exhibitor-grid" id="sponsor-grid"></div>
 
   <div class="back-link">
     <a href="index.html">ホームに戻る</a>
@@ -459,58 +503,92 @@
     seminars: [],
   });
 
-  const grid = document.getElementById('exhibitor-grid');
+  /*
+    協賛企業データ。決定次第、下記の配列に情報を追記してください（項目はEXHIBITORSと同様）。
+    出展企業とは異なりブース番号・ブース内ミニセミナーは基本的に持たないため、
+    カードには「協賛企業」タグと業種・紹介文を表示します。
+  */
+  const SPONSORS = Array.from({ length: 10 }, (_, i) => ({
+    no: i + 1,
+    name: null,
+    category: null,
+    desc: null,
+    logo: null,
+  }));
 
-  EXHIBITORS.forEach((ex) => {
-    const isEmpty = !ex.name;
-    const no = String(ex.no).padStart(2, '0');
-    const name = ex.name || `企業名（No.${no}・決定次第公開）`;
-    const desc = ex.desc || '出展企業の詳細は決定次第、こちらに掲載いたします。';
-    const initial = ex.name ? ex.name.charAt(0) : '🏢';
-    const hasSeminar = Array.isArray(ex.seminars) && ex.seminars.length > 0;
-
-    const card = document.createElement('div');
-    card.className = 'exhibitor-card' + (isEmpty ? ' is-empty' : '');
-
-    const logoHtml = ex.logo
-      ? `<img src="${ex.logo}" alt="${name}のロゴ">`
-      : initial;
-
-    const metaHtml = [
-      ex.booth ? `<span class="exhibitor-booth">ブース ${ex.booth}</span>` : '',
-      ex.category ? `<span class="exhibitor-category">${ex.category}</span>` : '',
-    ].join('');
-
-    const seminarFlagHtml = isEmpty ? '' : (
-      hasSeminar
-        ? `<span class="exhibitor-seminar-flag yes">🎤 ブース内ミニセミナーあり</span>`
-        : `<span class="exhibitor-seminar-flag no">ブース内ミニセミナーなし</span>`
-    );
-
-    const seminarListHtml = hasSeminar
-      ? `<div class="exhibitor-seminars">
-          ${ex.seminars.map((s) => `
-            <div class="exhibitor-seminar-item"><span class="time">${s.time}</span>${s.title}</div>
-          `).join('')}
-        </div>`
-      : '';
-
-    card.innerHTML = `
-      <div class="exhibitor-card-top">
-        <div class="exhibitor-logo">${logoHtml}</div>
-        <div class="exhibitor-card-title">
-          <div class="exhibitor-no">No.${no}</div>
-          <div class="exhibitor-name">${name}</div>
-        </div>
-      </div>
-      ${metaHtml ? `<div class="exhibitor-meta">${metaHtml}</div>` : ''}
-      <p class="exhibitor-desc">${desc}</p>
-      ${seminarFlagHtml}
-      ${seminarListHtml}
-    `;
-
-    grid.appendChild(card);
+  Object.assign(SPONSORS[0], {
+    name: "D証券会社",
+    category: "証券会社",
   });
+
+  Object.assign(SPONSORS[1], {
+    name: "SM証券会社",
+    category: "証券会社",
+  });
+
+  function renderCards(list, gridId, opts) {
+    opts = opts || {};
+    const grid = document.getElementById(gridId);
+
+    list.forEach((ex) => {
+      const isEmpty = !ex.name;
+      const no = String(ex.no).padStart(2, '0');
+      const name = ex.name || `企業名（No.${no}・決定次第公開）`;
+      const desc = ex.desc || `${opts.emptyDescLabel || '出展企業'}の詳細は決定次第、こちらに掲載いたします。`;
+      const initial = ex.name ? ex.name.charAt(0) : '🏢';
+      const hasSeminar = opts.showSeminar && Array.isArray(ex.seminars) && ex.seminars.length > 0;
+
+      const card = document.createElement('div');
+      card.className = 'exhibitor-card' + (isEmpty ? ' is-empty' : '');
+
+      const logoHtml = ex.logo
+        ? `<img src="${ex.logo}" alt="${name}のロゴ">`
+        : initial;
+
+      const metaHtml = [
+        (opts.showBooth && ex.booth) ? `<span class="exhibitor-booth">ブース ${ex.booth}</span>` : '',
+        ex.category ? `<span class="exhibitor-category">${ex.category}</span>` : '',
+      ].join('');
+
+      const sponsorFlagHtml = (opts.showSponsorFlag && !isEmpty)
+        ? `<span class="sponsor-flag">🤝 協賛企業</span>`
+        : '';
+
+      const seminarFlagHtml = (opts.showSeminar && !isEmpty) ? (
+        hasSeminar
+          ? `<span class="exhibitor-seminar-flag yes">🎤 ブース内ミニセミナーあり</span>`
+          : `<span class="exhibitor-seminar-flag no">ブース内ミニセミナーなし</span>`
+      ) : '';
+
+      const seminarListHtml = hasSeminar
+        ? `<div class="exhibitor-seminars">
+            ${ex.seminars.map((s) => `
+              <div class="exhibitor-seminar-item"><span class="time">${s.time}</span>${s.title}</div>
+            `).join('')}
+          </div>`
+        : '';
+
+      card.innerHTML = `
+        <div class="exhibitor-card-top">
+          <div class="exhibitor-logo">${logoHtml}</div>
+          <div class="exhibitor-card-title">
+            <div class="exhibitor-no">No.${no}</div>
+            <div class="exhibitor-name">${name}</div>
+          </div>
+        </div>
+        ${metaHtml ? `<div class="exhibitor-meta">${metaHtml}</div>` : ''}
+        <p class="exhibitor-desc">${desc}</p>
+        ${sponsorFlagHtml}
+        ${seminarFlagHtml}
+        ${seminarListHtml}
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+  renderCards(EXHIBITORS, 'exhibitor-grid', { showBooth: true, showSeminar: true, emptyDescLabel: '出展企業' });
+  renderCards(SPONSORS, 'sponsor-grid', { showSponsorFlag: true, emptyDescLabel: '協賛企業' });
 </script>
 
 <footer>

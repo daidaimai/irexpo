@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タイムテーブル | 福証IR EXPO　福岡の金融の祭典</title>
+<style>
+  :root {
+    --navy: #0d3b66;
+    --blue: #1565c0;
+    --sky: #29b6f6;
+    --skylight: #e1f5fe;
+    --orange: #ff7a00;
+    --orange-dark: #e8650a;
+    --yellow: #ffc107;
+    --ink: #1c2b39;
+
+    /* タイムテーブルの縦スケール：1分あたりの高さ(px) */
+    --px-per-min: 2px;
+    --time-col-width: 64px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "メイリオ", Meiryo, "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: #e9f4fd;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ===== Header / Nav ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(13, 59, 102, 0.08);
+  }
+
+  .nav-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+  }
+
+  .logo {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span.mark {
+    background: linear-gradient(135deg, var(--blue), var(--sky));
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 14px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--navy);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color 0.2s;
+  }
+
+  nav a:hover,
+  nav a.active { border-color: var(--orange); }
+
+  @media (max-width: 720px) {
+    nav ul { gap: 14px; }
+    nav a { font-size: 12px; }
+  }
+
+  /* ===== Page banner ===== */
+  .page-banner {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 55%, var(--sky) 100%);
+    color: #fff;
+    padding: 50px 24px;
+    text-align: center;
+  }
+
+  .page-banner .eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 14px;
+  }
+
+  .page-banner h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+  }
+
+  .page-banner p {
+    margin: 0;
+    font-size: 15px;
+    color: #e3f2fd;
+  }
+
+  /* ===== Section ===== */
+  .timetable-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* ===== Day tabs ===== */
+  .day-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .day-tab {
+    font: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(--blue);
+    background: #fff;
+    border: 2px solid var(--blue);
+    border-radius: 999px;
+    padding: 10px 26px;
+    cursor: pointer;
+  }
+
+  .day-tab.active {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  /* ===== Timetable ===== */
+  .tt-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(13,59,102,0.08);
+    padding: 20px;
+  }
+
+  /* スマホでは表の中だけ横スクロール */
+  .tt-scroll {
+    overflow-x: auto;
+  }
+
+  .tt {
+    min-width: 760px;
+    padding-bottom: 10px; /* 最下段（18:00）の時刻ラベルが切れないように */
+  }
+
+  .tt-head,
+  .tt-body {
+    display: grid;
+    grid-template-columns: var(--time-col-width) repeat(4, 1fr);
+  }
+
+  .tt-room {
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    background: var(--navy);
+    padding: 10px 6px;
+    margin: 0 3px 8px;
+    border-radius: 10px;
+    line-height: 1.5;
+  }
+
+  .tt-room small {
+    display: block;
+    font-size: 11px;
+    font-weight: normal;
+    color: #cfe3f5;
+  }
+
+  .tt-body {
+    position: relative;
+    margin-top: 10px; /* 最上段（10:00）の時刻ラベルが見出しに重ならないように */
+    /* 高さは JS で (終了 - 開始) 分 × --px-per-min に設定 */
+  }
+
+  /* 目盛り線（横線）レイヤー：全列にまたがる */
+  .tt-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .tt-line {
+    position: absolute;
+    left: var(--time-col-width);
+    right: 0;
+    border-top: 1px solid #b0cfe6;
+  }
+
+  .tt-line.sub {
+    border-top: 1px dashed #dbe9f4;
+  }
+
+  /* 時刻ラベル列 */
+  .tt-times {
+    position: relative;
+  }
+
+  .tt-time {
+    position: absolute;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--blue);
+  }
+
+  /* 会場列 */
+  .tt-col {
+    position: relative;
+    border-left: 1px solid #e1eef8;
+  }
+
+  .tt-col:last-child {
+    border-right: 1px solid #e1eef8;
+  }
+
+  /* イベント枠 */
+  .tt-event {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    z-index: 1;
+    overflow: hidden;
+    background: var(--skylight);
+    border: 2px solid var(--blue);
+    border-radius: 8px;
+    padding: 4px 8px;
+    line-height: 1.4;
+  }
+
+  .tt-event .time {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--blue);
+  }
+
+  .tt-event .title {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--navy);
+  }
+
+  .tt-note {
+    font-size: 13px;
+    color: #546e7a;
+    margin: 16px 0 0;
+    line-height: 1.7;
+  }
+
+  /* ===== Back link ===== */
+  .back-link-wrap {
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .back-link {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 12px 28px;
+    border-radius: 999px;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--navy);
+    color: #cfe3f5;
+    text-align: center;
+    padding: 36px 24px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  footer .org {
+    font-weight: bold;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .footer-links {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: #90caf9;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .footer-links a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo"><span class="mark">FSE</span>福岡証券取引所</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">ホーム</a></li>
+        <li><a href="index.html#overview">開催概要</a></li>
+        <li><a href="index.html#programs">イベント内容</a></li>
+        <li><a href="timetable.html" class="active">タイムテーブル</a></li>
+        <li><a href="exhibitors.html">出展企業</a></li>
+        <li><a href="index.html#access">アクセス</a></li>
+        <li><a href="index.html#register">申し込み</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="page-banner">
+  <span class="eyebrow">福証IR EXPO　福岡の金融の祭典</span>
+  <h1>タイムテーブル</h1>
+  <p>2027年2月26日(金)・27日(土) ｜ 福岡国際会議場</p>
+</div>
+
+<div class="timetable-wrap">
+
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <div class="tt-card">
+    <div class="tt-scroll">
+      <div class="tt">
+        <div class="tt-head" id="ttHead"></div>
+        <div class="tt-body" id="ttBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="tt-note">※ 掲載内容は仮のものです。プログラム・時間は変更となる場合があります。</p>
+
+  <div class="back-link-wrap">
+    <a href="index.html" class="back-link">ホームに戻る</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="org">福岡証券取引所</div>
+  福証IR EXPO　福岡の金融の祭典　運営事務局<br>
+  本ページの内容は予告なく変更となる場合があります。
+  <div class="footer-links">
+    <a href="https://www.fse.or.jp/privacy/index.php" target="_blank" rel="noopener">個人情報の取り扱いについて</a>
+    <a href="https://www.fse.or.jp/disclaimer/index.php" target="_blank" rel="noopener">免責事項</a>
+  </div>
+</footer>
+
+<script>
+  /* =========================================================
+     タイムテーブル設定
+     ここを書き換えるだけで表示が変わります。
+     ========================================================= */
+
+  // 表示する時間帯
+  const DAY_START = "10:00";
+  const DAY_END   = "18:00";
+
+  // イベント枠の標準の長さ（分）
+  const DEFAULT_DURATION = 40;
+
+  // 開催日
+  const DAYS = [
+    { id: "day1", label: "2月26日（金）" },
+    { id: "day2", label: "2月27日（土）" },
+  ];
+
+  // 会場（左から表示順）
+  const ROOMS = [
+    { id: "main",  name: "2F メインホール" },
+    { id: "mainS", name: "2F セミナールーム", sub: "（メインホール内）" },
+    { id: "s4a",   name: "4F セミナー会場①", sub: "（409・410）" },
+    { id: "s4b",   name: "4F セミナー会場②", sub: "（411・412）" },
+  ];
+
+  // イベント一覧
+  //   day   : 開催日の id（DAYS 参照）
+  //   room  : 会場の id（ROOMS 参照）
+  //   start : 開始時刻 "HH:MM"
+  //   title : イベント名
+  //   duration : 長さ（分）。省略時は DEFAULT_DURATION（40分）
+  const EVENTS = [
+    // ---- 2月26日（金）※仮データ ----
+    { day: "day1", room: "main",  start: "11:00", title: "特別講演会 第1回" },
+    { day: "day1", room: "mainS", start: "10:30", title: "サンプルイベントA" },
+    { day: "day1", room: "mainS", start: "14:00", title: "サンプルイベントB" },
+    { day: "day1", room: "s4a",   start: "13:00", title: "マネーセミナー①" },
+    { day: "day1", room: "s4a",   start: "15:00", title: "マネーセミナー②" },
+    { day: "day1", room: "s4b",   start: "16:30", title: "サンプルイベントC" },
+
+    // ---- 2月27日（土）※仮データ ----
+    { day: "day2", room: "main",  start: "11:00", title: "特別講演会 第2回" },
+    { day: "day2", room: "main",  start: "12:00", title: "特別講演会 第3回" },
+    { day: "day2", room: "mainS", start: "15:30", title: "サンプルイベントD" },
+    { day: "day2", room: "s4a",   start: "10:30", title: "マネーセミナー③" },
+    { day: "day2", room: "s4b",   start: "13:00", title: "親子で学ぶマネー教室" },
+    { day: "day2", room: "s4b",   start: "17:00", title: "サンプルイベントE" },
+  ];
+
+  /* =========================================================
+     描画処理（通常は編集不要）
+     ========================================================= */
+
+  // "HH:MM" → 0時からの分数
+  function toMin(hhmm) {
+    const [h, m] = hhmm.split(":").map(Number);
+    return h * 60 + m;
+  }
+
+  // 分数 → "H:MM"
+  function toHHMM(min) {
+    const h = Math.floor(min / 60);
+    const m = String(min % 60).padStart(2, "0");
+    return h + ":" + m;
+  }
+
+  const startMin = toMin(DAY_START);
+  const endMin   = toMin(DAY_END);
+  const pxPerMin = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px-per-min"));
+
+  // 時刻 → 上端からの位置(px)
+  function topOf(min) {
+    return (min - startMin) * pxPerMin;
+  }
+
+  const head = document.getElementById("ttHead");
+  const body = document.getElementById("ttBody");
+  const tabs = document.getElementById("dayTabs");
+
+  function buildHead() {
+    head.innerHTML = "<div></div>";
+    ROOMS.forEach(room => {
+      const el = document.createElement("div");
+      el.className = "tt-room";
+      el.textContent = room.name;
+      if (room.sub) {
+        const small = document.createElement("small");
+        small.textContent = room.sub;
+        el.appendChild(small);
+      }
+      head.appendChild(el);
+    });
+  }
+
+  function render(dayId) {
+    body.innerHTML = "";
+    body.style.height = topOf(endMin) + "px";
+
+    // 目盛り線（1時間ごと：実線、30分ごと：点線）と時刻ラベル
+    const lines = document.createElement("div");
+    lines.className = "tt-lines";
+    const times = document.createElement("div");
+    times.className = "tt-times";
+
+    for (let t = startMin; t <= endMin; t += 30) {
+      const isHour = (t % 60 === 0);
+      const line = document.createElement("div");
+      line.className = "tt-line" + (isHour ? "" : " sub");
+      line.style.top = topOf(t) + "px";
+      lines.appendChild(line);
+
+      if (isHour) {
+        const label = document.createElement("div");
+        label.className = "tt-time";
+        label.style.top = topOf(t) + "px";
+        label.textContent = toHHMM(t);
+        times.appendChild(label);
+      }
+    }
+
+    body.appendChild(lines);
+    body.appendChild(times);
+
+    // 会場ごとの列
+    const cols = {};
+    ROOMS.forEach(room => {
+      const col = document.createElement("div");
+      col.className = "tt-col";
+      cols[room.id] = col;
+      body.appendChild(col);
+    });
+
+    // イベント枠
+    EVENTS.filter(ev => ev.day === dayId).forEach(ev => {
+      const col = cols[ev.room];
+      if (!col) {
+        console.warn("会場IDが見つかりません:", ev);
+        return;
+      }
+      const s = toMin(ev.start);
+      const e = s + (ev.duration || DEFAULT_DURATION);
+      if (s < startMin || e > endMin) {
+        console.warn("表示時間帯の範囲外です:", ev);
+        return;
+      }
+
+      const box = document.createElement("div");
+      box.className = "tt-event";
+      box.style.top = topOf(s) + "px";
+      box.style.height = (e - s) * pxPerMin + "px";
+
+      const time = document.createElement("span");
+      time.className = "time";
+      time.textContent = toHHMM(s) + "〜" + toHHMM(e);
+
+      const title = document.createElement("span");
+      title.className = "title";
+      title.textContent = ev.title;
+
+      box.append(time, title);
+      col.appendChild(box);
+    });
+  }
+
+  function buildTabs() {
+    DAYS.forEach((day, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "day-tab" + (i === 0 ? " active" : "");
+      btn.textContent = day.label;
+      btn.addEventListener("click", () => {
+        tabs.querySelectorAll(".day-tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        render(day.id);
+      });
+      tabs.appendChild(btn);
+    });
+  }
+
+  buildHead();
+  buildTabs();
+  render(DAYS[0].id);
+</script>
+
+</body>
+</html>

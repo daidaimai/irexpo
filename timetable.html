@@ -86,9 +86,74 @@
   nav a:hover,
   nav a.active { border-color: var(--orange); }
 
-  @media (max-width: 720px) {
-    nav ul { gap: 14px; }
-    nav a { font-size: 12px; }
+  /* ハンバーガーボタン（PCでは非表示） */
+  .nav-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .nav-toggle span {
+    position: absolute;
+    left: 11px;
+    width: 22px;
+    height: 2px;
+    background: var(--navy);
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .nav-toggle span:nth-child(1) { top: 15px; }
+  .nav-toggle span:nth-child(2) { top: 21px; }
+  .nav-toggle span:nth-child(3) { top: 27px; }
+
+  /* 開いているときは「×」表示 */
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* この幅以下でハンバーガー表示に切り替え */
+  @media (max-width: 900px) {
+    .nav-wrap { padding: 8px 16px; }
+
+    .nav-toggle { display: block; }
+
+    nav ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: #fff;
+      box-shadow: 0 8px 16px rgba(13, 59, 102, 0.12);
+      padding: 4px 0 8px;
+    }
+
+    nav.open ul { display: flex; }
+
+    nav li { border-top: 1px solid #e1f5fe; }
+
+    nav a {
+      display: block;
+      font-size: 15px;
+      padding: 14px 24px;
+      border-bottom: none;
+      border-left: 4px solid transparent;
+    }
+
+    nav a:hover,
+    nav a.active {
+      border-left-color: var(--orange);
+      background: #f4faff;
+    }
   }
 
   /* ===== Page banner ===== */
@@ -173,7 +238,9 @@
 
   @media (max-width: 720px) {
     .tt-card { padding: 16px 12px; }
-    .tt { min-width: 700px; }
+    /* スマホでは列幅と縦の縮尺を広げ、コマ内の文字が収まるようにする */
+    :root { --px-per-min: 3px; }
+    .tt { min-width: 860px; }
   }
 
   .tt-head,
@@ -313,6 +380,36 @@
     color: var(--navy);
   }
 
+  /* 題名がリンクの場合 */
+  .tt-event a.title {
+    text-decoration: underline;
+    text-decoration-color: rgba(13, 59, 102, 0.35);
+    text-underline-offset: 2px;
+  }
+
+  .tt-event a.title::after {
+    content: " ›";
+    color: var(--ev-line);
+  }
+
+  .tt-event a.title:hover {
+    color: var(--ev-line);
+    text-decoration-color: currentColor;
+  }
+
+  /* 登壇者・定員などの補足行 */
+  .tt-event .info {
+    display: block;
+    font-size: 11px;
+    color: #37474f;
+    margin-top: 1px;
+  }
+
+  .tt-event .info b {
+    color: var(--ev-line);
+    margin-right: 4px;
+  }
+
   /* コマ内の強調タブ（EVENTS の tag で指定） */
   .tt-tag {
     display: inline-block;
@@ -394,8 +491,11 @@
 <header>
   <div class="nav-wrap">
     <div class="logo"><span class="mark">FSE</span>福岡証券取引所</div>
-    <nav>
-      <ul>
+    <nav id="siteNav">
+      <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="メニューを開く">
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="navMenu">
         <li><a href="index.html">ホーム</a></li>
         <li><a href="index.html#overview">開催概要</a></li>
         <li><a href="index.html#programs">イベント内容</a></li>
@@ -484,30 +584,67 @@
     "ブースミニ説明会":       "t-booth",
   };
 
+  // 登壇者行の見出し（tag ごとに変更可。未登録の tag は「登壇者」）
+  const SPEAKER_LABELS = {
+    "上場企業IR": "登壇予定者",
+  };
+
   // イベント一覧（コマ）
   //   day   : 開催日の id（DAYS 参照）
   //   room  : 会場の id（ROOMS 参照）
   //   start : 開始時刻 "HH:MM"
   //   end   : 終了時刻 "HH:MM"
-  //   title : イベント名
+  //   title : コマの題名（特別セミナー＝セミナー題名、上場企業IR＝企業名 など）
+  //   link  : 題名を押したときの移動先（例 "events.html#lecture"）。省略時はリンクなし
   //   color : コマの色（COLORS 参照）。省略時は blue
   //   tag   : 強調タブの文言（TAGS 参照）。省略時はタブなし
+  //   ---- 以下は必要なコマだけ記入（省略した項目は表示されません） ----
+  //   speakers : 登壇者名の配列（1名でも [ ] で囲む）
+  //   capacity : 定員 { count: "300名", firstCome: true/false（先着順）, ticket: true/false（入場券の要・不要） }
   const EVENTS = [
     // ---- 2月26日（金）※仮データ ----
-    { day: "day1", room: "main",  start: "11:00", end: "12:00", title: "特別講演会 第1回",   color: "orange", tag: "特別セミナー" },
-    { day: "day1", room: "mainS", start: "10:30", end: "11:10", title: "サンプル企業A 会社説明", color: "blue",   tag: "上場企業IR" },
-    { day: "day1", room: "mainS", start: "14:00", end: "14:20", title: "サンプル企業B",       color: "blue",   tag: "ブースミニ説明会" },
-    { day: "day1", room: "s4a",   start: "13:00", end: "13:40", title: "はじめてのNISA",      color: "green",  tag: "証券会社マネーセミナー" },
-    { day: "day1", room: "s4a",   start: "15:00", end: "15:50", title: "iDeCo活用講座",       color: "green",  tag: "証券会社マネーセミナー" },
-    { day: "day1", room: "s4b",   start: "13:00", end: "17:00", title: "FPによる個別相談",    color: "purple", tag: "個別相談" },
+    {
+      day: "day1", room: "main", start: "11:00", end: "12:00",
+      title: "外国為替・内外市場環境分析（対談）", link: "events.html#lecture",
+      color: "orange", tag: "特別セミナー",
+      speakers: ["A氏（N社）", "B氏（F社）"],
+      capacity: { count: "300名", firstCome: true, ticket: false },
+    },
+    {
+      day: "day1", room: "mainS", start: "10:30", end: "11:10",
+      title: "福岡商事株式会社", link: "exhibitors.html",
+      color: "blue", tag: "上場企業IR",
+      speakers: ["代表取締役社長 ○○ ○○"],
+    },
+    { day: "day1", room: "mainS", start: "14:00", end: "14:20", title: "サンプル企業B", link: "events.html#booth", color: "blue", tag: "ブースミニ説明会" },
+    { day: "day1", room: "s4a",   start: "13:00", end: "13:40", title: "はじめてのNISA", link: "events.html#seminar", color: "green", tag: "証券会社マネーセミナー" },
+    { day: "day1", room: "s4a",   start: "15:00", end: "15:50", title: "iDeCo活用講座", link: "events.html#seminar", color: "green", tag: "証券会社マネーセミナー" },
+    { day: "day1", room: "s4b",   start: "13:00", end: "17:00", title: "FPによる個別相談", link: "events.html#consultation", color: "purple", tag: "個別相談" },
 
     // ---- 2月27日（土）※仮データ ----
-    { day: "day2", room: "main",  start: "11:00", end: "12:00", title: "特別講演会 第2回",   color: "orange", tag: "特別セミナー" },
-    { day: "day2", room: "main",  start: "12:00", end: "13:00", title: "特別講演会 第3回",   color: "orange", tag: "特別セミナー" },
-    { day: "day2", room: "mainS", start: "15:30", end: "16:10", title: "サンプル企業C 会社説明", color: "blue",   tag: "上場企業IR" },
-    { day: "day2", room: "s4a",   start: "10:30", end: "11:10", title: "家計管理の基礎",      color: "green",  tag: "証券会社マネーセミナー" },
-    { day: "day2", room: "s4b",   start: "13:00", end: "15:00", title: "親子で学ぶマネー教室", color: "pink",   tag: "親子金融経済教室" },
-    { day: "day2", room: "s4b",   start: "16:00", end: "16:40", title: "サンプルイベント（タブなし）" },
+    {
+      day: "day2", room: "main", start: "11:00", end: "12:00",
+      title: "投資アナリスト×タレント対談", link: "events.html#lecture",
+      color: "orange", tag: "特別セミナー",
+      speakers: ["C氏（投資アナリスト）", "D氏（タレント）"],
+      capacity: { count: "300名", firstCome: true, ticket: true },
+    },
+    {
+      day: "day2", room: "main", start: "12:00", end: "13:00",
+      title: "四季報の見方", link: "events.html#lecture",
+      color: "orange", tag: "特別セミナー",
+      speakers: ["G氏（東洋経済新報社）"],
+      capacity: { count: "300名", firstCome: true, ticket: false },
+    },
+    {
+      day: "day2", room: "mainS", start: "15:30", end: "16:10",
+      title: "はかた電機工業株式会社", link: "exhibitors.html",
+      color: "blue", tag: "上場企業IR",
+      speakers: ["代表取締役 ○○ ○○", "IR室長 ○○ ○○"],
+    },
+    { day: "day2", room: "s4a", start: "10:30", end: "11:10", title: "家計管理の基礎", link: "events.html#seminar", color: "green", tag: "証券会社マネーセミナー" },
+    { day: "day2", room: "s4b", start: "13:00", end: "15:00", title: "親子で学ぶマネー教室", link: "events.html#family", color: "pink", tag: "親子金融経済教室" },
+    { day: "day2", room: "s4b", start: "16:00", end: "16:40", title: "サンプルイベント（タブ・リンクなし）" },
   ];
 
   /* =========================================================
@@ -529,7 +666,9 @@
 
   const startMin = toMin(DAY_START);
   const endMin   = toMin(DAY_END);
-  const pxPerMin = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px-per-min"));
+  // 縦の縮尺（CSS の --px-per-min）。画面幅で変わるため描画のたびに読み直す
+  let pxPerMin = 2;
+  let currentDay = null;
 
   // 時刻 → 上端からの位置(px)
   function topOf(min) {
@@ -556,6 +695,8 @@
   }
 
   function render(dayId) {
+    currentDay = dayId;
+    pxPerMin = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--px-per-min"));
     body.innerHTML = "";
     body.style.height = topOf(endMin) + "px";
 
@@ -638,33 +779,87 @@
       time.textContent = toHHMM(s) + "〜" + toHHMM(e);
       meta.appendChild(time);
 
-      const title = document.createElement("span");
+      // 題名（link があれば同じタブで開くリンクにする → ブラウザの「戻る」で戻れる）
+      const title = document.createElement(ev.link ? "a" : "span");
       title.className = "title";
       title.textContent = ev.title;
+      if (ev.link) title.href = ev.link;
 
       box.append(meta, title);
+
+      // 登壇者
+      if (ev.speakers && ev.speakers.length) {
+        box.appendChild(infoLine(SPEAKER_LABELS[ev.tag] || "登壇者", ev.speakers.join("／")));
+      }
+
+      // 定員
+      if (ev.capacity) {
+        const c = ev.capacity;
+        const parts = [];
+        if (c.count) parts.push(c.count);
+        if (c.firstCome) parts.push("先着順");
+        if (c.ticket === true) parts.push("入場券必要");
+        if (c.ticket === false) parts.push("入場券不要");
+        box.appendChild(infoLine("定員", parts.join("・")));
+      }
+
       col.appendChild(box);
     });
   }
 
+  // 「見出し 内容」形式の補足行を作る
+  function infoLine(label, text) {
+    const line = document.createElement("span");
+    line.className = "info";
+    const b = document.createElement("b");
+    b.textContent = label;
+    line.append(b, text);
+    return line;
+  }
+
+  // 選択中の日付は URL の「#day2」などに記録し、
+  // 詳細ページからブラウザの「戻る」で戻ったときも同じ日付を表示する
+  function selectDay(dayId) {
+    tabs.querySelectorAll(".day-tab").forEach(b => {
+      b.classList.toggle("active", b.dataset.day === dayId);
+    });
+    history.replaceState(null, "", "#" + dayId);
+    render(dayId);
+  }
+
   function buildTabs() {
-    DAYS.forEach((day, i) => {
+    DAYS.forEach(day => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "day-tab" + (i === 0 ? " active" : "");
+      btn.className = "day-tab";
+      btn.dataset.day = day.id;
       btn.textContent = day.label;
-      btn.addEventListener("click", () => {
-        tabs.querySelectorAll(".day-tab").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        render(day.id);
-      });
+      btn.addEventListener("click", () => selectDay(day.id));
       tabs.appendChild(btn);
     });
   }
 
+  // ハンバーガーメニューの開閉
+  const nav = document.getElementById("siteNav");
+  const navToggle = document.getElementById("navToggle");
+
+  function setNavOpen(open) {
+    nav.classList.toggle("open", open);
+    navToggle.setAttribute("aria-expanded", String(open));
+    navToggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+  }
+
+  navToggle.addEventListener("click", () => setNavOpen(!nav.classList.contains("open")));
+  nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setNavOpen(false)));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") setNavOpen(false); });
+
+  // 画面幅がスマホ⇔PCで切り替わったら縮尺を合わせて描き直す
+  window.matchMedia("(max-width: 720px)").addEventListener("change", () => render(currentDay));
+
   buildHead();
   buildTabs();
-  render(DAYS[0].id);
+  const initialDay = DAYS.find(d => "#" + d.id === location.hash);
+  selectDay((initialDay || DAYS[0]).id);
 </script>
 
 </body>
